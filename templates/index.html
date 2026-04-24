@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Year Progress</title>
+
+  <!-- ربط ملف CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- الخط -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span id="icon">🌙</span>
+  </button>
+
+  <div class="container">
+    <div class="date-time-info" id="date-time-info">— | — | —</div>
+
+    <div class="headline" id="headline">—% of 2026 has passed</div>
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="remaining-days" id="remaining-days">Remaining days of year 2026 — days</div>
+  </div>
+
+  <script>
+    let isDark = false;
+
+    function toggleTheme() {
+      isDark = !isDark;
+      document.body.classList.toggle('dark', isDark);
+      document.getElementById('icon').textContent = isDark ? '☀️' : '🌙';
+    }
+
+    function renderProgress() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const start = new Date(year, 0, 1);
+      const end = new Date(year + 1, 0, 1);
+
+      const percent = ((now - start) / (end - start)) * 100;
+
+      // Calculate remaining days
+      const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+      const elapsedDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      const remainingDays = totalDays - elapsedDays;
+
+      // Get date, time, and day
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const day = days[now.getDay()];
+      const date = now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      document.getElementById('date-time-info').textContent =
+        date + ' | ' + day + ' | ' + time;
+
+      document.getElementById('headline').textContent =
+        percent.toFixed(1) + '% of ' + year + ' has passed';
+
+      document.getElementById('progress-fill').style.width =
+        percent + '%';
+
+      document.getElementById('remaining-days').textContent =
+        'Remaining days of year ' + year + ': ' + remainingDays + ' days';
+    }
+
+    renderProgress();
+  </script>
+<link rel="stylesheet" href="index.css">
+</body>
+</html>

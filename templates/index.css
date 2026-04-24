@@ -1,0 +1,108 @@
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --bar-bg: #2e2e2e;
+  --bar-fill: #00e846;
+}
+
+body.dark {
+  --bg: #111111;
+  --text: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ✨ توسيط كامل الصفحة */
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+
+  transition: 0.3s;
+}
+
+/* 📦 الحاوية */
+.container {
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+}
+
+/* � تاريخ والوقت واليوم */
+.date-time-info {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 25px;
+  font-weight: 500;
+}
+
+/* �📝 النص */
+.headline {
+  font-size: clamp(24px, 5vw, 60px);
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* ⏱️ الأيام المتبقية */
+.remaining-days {
+  font-size: 16px;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+body.dark .remaining-days {
+  color: #000000;
+}
+
+/* 📊 شريط التقدم */
+.progress-wrap {
+  width: 90%;
+  height: 80px;
+  background: var(--bar-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--bar-fill);
+  transition: width 1.2s ease;
+}
+
+/* 🌙 زر التبديل */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+  border: 1px solid var(--text);
+  background: transparent;
+  color: var(--text);
+
+  cursor: pointer;
+}
+
+/* 📱 موبايل */
+@media (max-width: 600px) {
+  .headline {
+    font-size: 28px;
+  }
+
+  .progress-wrap {
+    height: 60px;
+  }
+}
