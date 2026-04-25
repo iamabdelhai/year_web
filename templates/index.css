@@ -55,12 +55,8 @@ body {
 /* ⏱️ الأيام المتبقية */
 .remaining-days {
   font-size: 16px;
-  color: #000000;
+  color: var(--text);
   margin-bottom: 20px;
-}
-
-body.dark .remaining-days {
-  color: #000000;
 }
 
 /* 📊 شريط التقدم */
@@ -70,6 +66,7 @@ body.dark .remaining-days {
   background: var(--bar-bg);
   border-radius: 6px;
   overflow: hidden;
+  margin: 0 auto;
 }
 
 .progress-fill {
