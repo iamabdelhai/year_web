@@ -2,219 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#ffffff" id="theme-meta" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Year Progress</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-  <style>
-    /* ── Variables ── */
-    :root {
-      --bg:       #ffffff;
-      --text:     #1a1a1a;
-      --bar-bg:   #2e2e2e;
-      --bar-fill: #00e846;
-      --btn-border: rgba(0,0,0,0.25);
-    }
-    body.dark {
-      --bg:         #111111;
-      --text:       #ffffff;
-      --btn-border: rgba(255,255,255,0.35);
-    }
 
-    /* ── Reset ── */
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <!-- ربط ملف CSS -->
+  <link rel="stylesheet" href="style.css">
 
-    html {
-      /* prevent horizontal scroll on mobile */
-      overflow-x: hidden;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      min-height: 100vh;
-      min-height: 100dvh; /* dynamic viewport on mobile browsers */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      /* responsive padding: shrinks on small screens */
-      padding: 80px clamp(20px, 8vw, 100px) 60px;
-      transition: background 0.35s ease, color 0.35s ease;
-      overflow-x: hidden;
-    }
-
-    /* ── Theme toggle button ── */
-    .theme-toggle {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      /* comfortable tap target (min 44px recommended by Apple/Google) */
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: transparent;
-      border: 1.5px solid var(--btn-border);
-      color: var(--text);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.35s ease, color 0.35s ease, transform 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      /* sit above everything */
-      z-index: 100;
-    }
-    .theme-toggle:hover  { transform: scale(1.1); }
-    .theme-toggle:active { transform: scale(0.95); }
-
-    /* ── Headline ── */
-    .headline {
-      font-size: clamp(20px, 5vw, 60px);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: clamp(28px, 5vw, 52px);
-      color: var(--text);
-      transition: color 0.35s ease;
-      /* allow wrapping on very small screens without overflow */
-      word-break: break-word;
-      hyphens: auto;
-      max-width: 100%;
-    }
-
-    /* ── Progress bar ── */
-    .progress-wrap {
-      width: 100%;
-      /* height scales with viewport — stays chunky everywhere */
-      height: clamp(65px, 13vw, 110px);
-      background: var(--bar-bg);
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-      /* never wider than a comfortable reading line */
-      max-width: 700%;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--bar-fill);
-      width: 0%;
-      border-radius: 0;
-      transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
-      /* GPU layer for smooth animation */
-      will-change: width;
-    }
-
-    /* ── Tablet ── */
-    @media (min-width: 601px) and (max-width: 1024px) {
-      body { padding-top: 80px; }
-    }
-
-    /* ── Mobile (≤ 480px) ── */
-    @media (max-width: 480px) {
-      body { padding-top: 76px; }
-      .theme-toggle {
-        top: 14px;
-        right: 14px;
-      }
-    }
-  </style>
+  <!-- الخط -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
-  <!-- Day / Night toggle -->
-  <button
-    class="theme-toggle"
-    id="theme-toggle"
-    onclick="toggleTheme()"
-    title="Toggle day / night mode"
-    aria-label="Toggle day/night mode"
-  >
-    <!-- Moon (shown in day mode) -->
-    <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-    </svg>
-    <!-- Sun (shown in night mode) -->
-    <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round"
-         aria-hidden="true" style="display:none;">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1"     x2="12" y2="3"/>
-      <line x1="12" y1="21"    x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22"   x2="5.64"  y2="5.64"/>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1"  y1="12"    x2="3"  y2="12"/>
-      <line x1="21" y1="12"    x2="23" y2="12"/>
-      <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
-      <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
-    </svg>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span id="icon">🌙</span>
   </button>
 
-  <div class="headline" id="headline">—% of — has passed</div>
+  <div class="container">
+    <div class="date-time-info" id="date-time-info">— | — | —</div>
 
-  <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progress-wrap">
-    <div class="progress-fill" id="progress-fill"></div>
+    <div class="headline" id="headline">—% of 2026 has passed</div>
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="remaining-days" id="remaining-days">Remaining days of year 2026 — days</div>
   </div>
 
   <script>
-    'use strict';
+    let isDark = false;
 
-    var isDark = false;
-
-    /* ── Day / Night toggle ── */
     function toggleTheme() {
       isDark = !isDark;
       document.body.classList.toggle('dark', isDark);
-      document.getElementById('icon-moon').style.display = isDark ? 'none'  : 'block';
-      document.getElementById('icon-sun').style.display  = isDark ? 'block' : 'none';
-      // update browser tab colour on mobile
-      document.getElementById('theme-meta').setAttribute('content', isDark ? '#111111' : '#ffffff');
+      document.getElementById('icon').textContent = isDark ? '☀️' : '🌙';
     }
 
-    /* ── Render result ── */
-    function applyData(percent, year) {
-      var pInt = Math.floor(percent);
-      document.getElementById('headline').textContent = pInt + '% of ' + year + ' has passed';
-      document.getElementById('progress-fill').style.width = percent + '%';
-      document.getElementById('progress-wrap').setAttribute('aria-valuenow', pInt);
+    function renderProgress() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const start = new Date(year, 0, 1);
+      const end = new Date(year + 1, 0, 1);
+
+      const percent = ((now - start) / (end - start)) * 100;
+
+      // Calculate remaining days
+      const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+      const elapsedDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      const remainingDays = totalDays - elapsedDays;
+
+      // Get date and day
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const day = days[now.getDay()];
+      const date = now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      document.getElementById('date-time-info').textContent =
+        date + ' | ' + day;
+
+      document.getElementById('headline').textContent =
+        percent.toFixed(1) + '% of ' + year + ' has passed';
+
+      document.getElementById('progress-fill').style.width =
+        percent + '%';
+
+      document.getElementById('remaining-days').textContent =
+        'Remaining days of year ' + year + ': ' + remainingDays + ' days';
     }
 
-    /* ── Client-side calculation (fallback) ── */
-    function renderClientSide() {
-      var now   = new Date();
-      var year  = now.getFullYear();
-      var start = new Date(year, 0, 1);
-      var end   = new Date(year + 1, 0, 1);
-      var pct   = ((now - start) / (end - start)) * 100;
-      applyData(pct, year);
-    }
-
-    /* ── Fetch from Flask API; fall back gracefully ── */
-    function fetchProgress() {
-      if (!window.fetch) { renderClientSide(); return; }
-      fetch('/api/year-progress')
-        .then(function(res) {
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.json();
-        })
-        .then(function(data) {
-          applyData(data.percent, data.year);
-        })
-        .catch(function() {
-          renderClientSide();
-        });
-    }
-
-    fetchProgress();
+    renderProgress();
   </script>
+<link rel="stylesheet" href="index.css">
 </body>
 </html>
